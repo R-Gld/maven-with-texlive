@@ -62,10 +62,21 @@ docker run -it --rm -v $(pwd):/workspace -w /workspace ghcr.io/r-gld/maven-with-
 
 ## Image Details
 
-- **Base Image**: `maven:3.9.9-eclipse-temurin-21-alpine`
+- **Base Image**: `maven:3.9.9-eclipse-temurin-21-alpine` (configurable)
 - **Additional Packages**: `texlive-full`
 - **Environment Variables**:
   - `MAVEN_OPTS="-Dmaven.repo.local=.m2/repository"`
+
+### Configurable Build Arguments
+
+The Dockerfile supports the following build arguments to customize the base image:
+
+| Argument | Default Value | Description |
+|----------|---------------|-------------|
+| `MAVEN_VERSION` | `3.9.9` | Maven version to use |
+| `JDK_TYPE` | `eclipse-temurin` | JDK distribution (e.g., `eclipse-temurin`, `amazoncorretto`, `ibm-semeru-jamvm`) |
+| `JAVA_VERSION` | `21` | Java version (e.g., `17`, `21`, `22`) |
+| `DISTRO` | `alpine` | Base distribution (e.g., `alpine`, `jammy`, `ubi9`) |
 
 ## Building the Image
 
@@ -90,17 +101,67 @@ The script automatically detects your system architecture and builds the appropr
 #### On ARM64 systems (Mac M2 Pro, etc.)
 
 ```bash
+# Using default versions
 docker build --platform linux/arm64 -t ghcr.io/r-gld/maven-with-texlive:arm64 .
+
+# Custom versions
+docker build --platform linux/arm64 \
+  --build-arg MAVEN_VERSION=3.9.10 \
+  --build-arg JAVA_VERSION=22 \
+  -t ghcr.io/r-gld/maven-with-texlive:arm64 .
 ```
 
 #### On AMD64 systems (x86_64)
 
 ```bash
+# Using default versions
 docker build --platform linux/amd64 \
   -t ghcr.io/r-gld/maven-with-texlive:amd64 \
   -t ghcr.io/r-gld/maven-with-texlive:latest \
   .
+
+# Custom versions
+docker build --platform linux/amd64 \
+  --build-arg MAVEN_VERSION=3.9.10 \
+  --build-arg JAVA_VERSION=22 \
+  -t ghcr.io/r-gld/maven-with-texlive:amd64 \
+  -t ghcr.io/r-gld/maven-with-texlive:latest \
+  .
 ```
+
+### Customization Examples
+
+#### Using a Different JDK Distribution
+
+```bash
+# Amazon Corretto JDK
+docker build \
+  --build-arg JDK_TYPE=amazoncorretto \
+  -t ghcr.io/r-gld/maven-with-texlive:corretto .
+
+# IBM Semeru Runtime
+docker build \
+  --build-arg JDK_TYPE=ibm-semeru-jamvm \
+  -t ghcr.io/r-gld/maven-with-texlive:semeru .
+```
+
+#### Using Java 17
+
+```bash
+docker build \
+  --build-arg JAVA_VERSION=17 \
+  -t ghcr.io/r-gld/maven-with-texlive:java17 .
+```
+
+#### Using Ubuntu Instead of Alpine
+
+```bash
+docker build \
+  --build-arg DISTRO=jammy \
+  -t ghcr.io/r-gld/maven-with-texlive:ubuntu .
+```
+
+**Note**: When using non-Alpine distributions, you may need to modify the package installation command in the Dockerfile (replace `apk add` with `apt-get install` for Debian/Ubuntu-based images).
 
 ## Pushing to GitHub Packages
 
