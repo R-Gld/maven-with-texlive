@@ -71,12 +71,12 @@ docker run -it --rm -v $(pwd):/workspace -w /workspace ghcr.io/r-gld/maven-with-
 
 The Dockerfile supports the following build arguments to customize the base image:
 
-| Argument | Default Value | Description |
-|----------|---------------|-------------|
-| `MAVEN_VERSION` | `3.9.9` | Maven version to use |
-| `JDK_TYPE` | `eclipse-temurin` | JDK distribution (e.g., `eclipse-temurin`, `amazoncorretto`, `ibm-semeru-jamvm`) |
-| `JAVA_VERSION` | `21` | Java version (e.g., `17`, `21`, `22`) |
-| `DISTRO` | `alpine` | Base distribution (e.g., `alpine`, `jammy`, `ubi9`) |
+| Argument        | Default Value     | Description                                                                      |
+|-----------------|-------------------|----------------------------------------------------------------------------------|
+| `MAVEN_VERSION` | `3.9.9`           | Maven version to use                                                             |
+| `JDK_TYPE`      | `eclipse-temurin` | JDK distribution (e.g., `eclipse-temurin`, `amazoncorretto`, `ibm-semeru-jamvm`) |
+| `JAVA_VERSION`  | `21`              | Java version (e.g., `17`, `21`, `22`)                                            |
+| `DISTRO`        | `alpine`          | Base distribution (e.g., `alpine`, `jammy`, `ubi9`)                              |
 
 ## Building the Image
 
