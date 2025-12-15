@@ -14,12 +14,23 @@ Installing `texlive-full` directly in CI jobs on each run significantly increase
 
 The standard `texlive` package lacks necessary language support (e.g., French language support), making `texlive-full` a requirement for comprehensive document generation.
 
+## Available Tags
+
+- `latest` - amd64 version (most common architecture)
+- `amd64` - amd64/x86_64 version
+- `arm64` - ARM64/aarch64 version (Apple Silicon, Raspberry Pi, etc.)
+
 ## Usage
 
 ### Pull from GitHub Container Registry
 
 ```bash
+# Pull latest (amd64)
 docker pull ghcr.io/r-gld/maven-with-texlive:latest
+
+# Pull specific architecture
+docker pull ghcr.io/r-gld/maven-with-texlive:arm64
+docker pull ghcr.io/r-gld/maven-with-texlive:amd64
 ```
 
 ### Use in GitLab CI
@@ -56,13 +67,77 @@ docker run -it --rm -v $(pwd):/workspace -w /workspace ghcr.io/r-gld/maven-with-
 - **Environment Variables**:
   - `MAVEN_OPTS="-Dmaven.repo.local=.m2/repository"`
 
-## Building Locally
+## Building the Image
 
-If you need to build this image locally:
+### Using the Automated Script (Recommended)
+
+The script automatically detects your system architecture and builds the appropriate image:
 
 ```bash
-docker build -t maven-with-texlive:latest .
+./build-docker-image.sh
 ```
+
+**What the script does:**
+
+1. **Detects architecture** automatically (arm64 or amd64)
+2. **Builds the image** with appropriate tags:
+   - On **arm64** (Mac M2 Pro, etc.): tags as `arm64`
+   - On **amd64** (x86_64): tags as `amd64` and `latest`
+3. **Prompts for push**: asks if you want to push to GitHub Packages
+
+### Manual Build Commands
+
+#### On ARM64 systems (Mac M2 Pro, etc.)
+
+```bash
+docker build --platform linux/arm64 -t ghcr.io/r-gld/maven-with-texlive:arm64 .
+```
+
+#### On AMD64 systems (x86_64)
+
+```bash
+docker build --platform linux/amd64 \
+  -t ghcr.io/r-gld/maven-with-texlive:amd64 \
+  -t ghcr.io/r-gld/maven-with-texlive:latest \
+  .
+```
+
+## Pushing to GitHub Packages
+
+### Using the Script
+
+When you run `./build-docker-image.sh`, you'll be prompted:
+
+```
+Do you want to push the image(s) to GitHub Container Registry? (y/N):
+```
+
+- Press `y` to push
+- Press `n` or Enter to cancel
+
+### Manual Push
+
+```bash
+# Push arm64 version
+docker push ghcr.io/r-gld/maven-with-texlive:arm64
+
+# Push amd64 version (with latest tag)
+docker push ghcr.io/r-gld/maven-with-texlive:amd64
+docker push ghcr.io/r-gld/maven-with-texlive:latest
+```
+
+## Troubleshooting
+
+### Build Fails
+
+```bash
+# Clean Docker cache
+docker system prune -a
+```
+
+### Unsupported Architecture
+
+The build script supports `x86_64/amd64` and `arm64/aarch64`. If you encounter an error about unsupported architecture, please build manually using the commands above.
 
 ## Package Registry
 
@@ -75,7 +150,7 @@ This image is ideal for projects that need to:
 - Build Java/Maven projects
 - Generate PDF documentation from LaTeX sources
 - Automate report generation in CI/CD pipelines
-- Support multilingual LaTeX documents (especially French)
+- Support multilingual LaTeX documents
 
 ## License
 
