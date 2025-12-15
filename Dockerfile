@@ -8,4 +8,4 @@ RUN apk add --no-cache texlive-full
 
 ENV MAVEN_OPTS="-Dmaven.repo.local=.m2/repository"
 
-LABEL org.opencontainers.image.source https://github.com/R-Gld/maven-with-texlive
+LABEL org.opencontainers.image.source=https://github.com/R-Gld/maven-with-texlive
