@@ -78,6 +78,8 @@ The Dockerfile supports the following build arguments to customize the base imag
 | `JAVA_VERSION`  | `21`              | Java version (e.g., `17`, `21`, `22`)                                            |
 | `DISTRO`        | `alpine`          | Base distribution (e.g., `alpine`, `jammy`, `ubi9`)                              |
 
+You can see all available maven tags at the [Maven Docker Hub page](https://hub.docker.com/_/maven).
+
 ## Building the Image
 
 ### Using the Automated Script (Recommended)
