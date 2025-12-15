@@ -3,7 +3,8 @@
 # Configuration
 GITHUB_USER="R-Gld"
 REPO_NAME="maven-with-texlive"
-IMAGE_NAME="ghcr.io/${GITHUB_USER}/${REPO_NAME}"
+# Docker requires lowercase repository names
+IMAGE_NAME="ghcr.io/$(echo ${GITHUB_USER} | tr '[:upper:]' '[:lower:]')/${REPO_NAME}"
 
 # Detect current architecture
 ARCH=$(uname -m)
@@ -44,7 +45,7 @@ for TAG in ${TAGS}; do
 done
 BUILD_CMD="${BUILD_CMD} ."
 
-eval ${BUILD_CMD}
+eval "${BUILD_CMD}"
 BUILD_STATUS=$?
 
 echo ""
@@ -72,7 +73,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
   for TAG in ${TAGS}; do
     echo "Pushing ${TAG}..."
-    docker push ${TAG}
+    docker push "${TAG}"
     PUSH_STATUS=$?
 
     if [ ${PUSH_STATUS} -ne 0 ]; then
